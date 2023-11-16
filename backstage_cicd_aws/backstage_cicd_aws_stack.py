@@ -1,3 +1,4 @@
+
 from aws_cdk import (
     # Duration,
     Stack,
@@ -10,10 +11,9 @@ class BackstageCicdAwsStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # The code that defines your stack goes here
-
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "BackstageCicdAwsQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
+        # github info for codepipeline
+        github_repo = props.get("GITHUB_APP_REPO")
+        github_org = props.get("GITHUB_ORG")
+        github_branch = props.get("GITHUB_APP_BRANCH", "main")
+        codestar_connection_arn = props.get("CODESTAR_CONN_ARN")
+        github_app_arn = props.get("GITHUB_APP_ARN")

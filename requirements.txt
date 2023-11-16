@@ -1,2 +1,5 @@
 aws-cdk-lib==2.109.0
 constructs>=10.0.0,<11.0.0
+python-dotenv
+pyyaml
+aws_cdk.core
