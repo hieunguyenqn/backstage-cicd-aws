@@ -90,7 +90,7 @@ class BackstageStack(Stack):
         # generate and store password and username
         self.aurora_creds = secrets.Secret(
             self, 'AuroraCredentialsSecret',
-            secret_name=f"{id}-backstage-db-auth",
+            secret_name="backstagedbauth",
             generate_secret_string=secret_string
         )
         # replace the .env pg passwd generated one to share between ECS and Aurora
