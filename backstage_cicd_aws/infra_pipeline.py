@@ -42,7 +42,7 @@ class InfraPipelineStack(Stack):
             "CodebuildProject",
             project_name=id,
             build_spec=codebuild.BuildSpec.from_source_filename('./infra-buildspec.yml'),
-            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_5_0)
+            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_7_0)
         )
         # lookups needed by backstage stack have to have permissions added in order to synth
         codebuild_policy = iam.PolicyStatement(
