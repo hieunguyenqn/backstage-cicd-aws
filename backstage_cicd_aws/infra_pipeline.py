@@ -53,13 +53,13 @@ class InfraPipelineStack(Stack):
         synth_project.add_to_role_policy(codebuild_policy)
 
         synth_action = actions.CodeBuildAction(
-            action_name="Build",
+            action_name="Synth",
             project=synth_project,
             input=source_output,
             outputs=[synth_output],
         )
         pipeline.add_stage(
-            stage_name="Synth",
+            stage_name="Build",
             actions=[synth_action]
         )
 
