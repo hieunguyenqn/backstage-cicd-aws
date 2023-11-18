@@ -20,9 +20,11 @@ common:
   # CodePipeline repo info
   GITHUB_APP_REPO: "backstage-app-aws"
   GITHUB_INFRA_REPO: "backstage-cicd-aws"
-  GITHUB_ORG: 'simpo'
-
-# ENV var overrides per stage
+  GITHUB_INFRA_BRANCH : "main"
+  GITHUB_ORG: 'hieunguyenqn'
+  # Github Connection for Code* services
+  CODESTAR_CONN_ARN: "arn:aws:codestar-connections:ap-southeast-1:938364739091:connection/cb60ffe7-4dd7-4a32-9f48-4f2f77b7a8b0"
+ # ENV var overrides per stage
 stages: 
   test:
     ### This Config overrides for test stage

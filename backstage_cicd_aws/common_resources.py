@@ -1,15 +1,15 @@
-import json
 from aws_cdk import (
-    core,
+    Stack,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_ecr as ecr,
     aws_iam as iam,
     aws_rds as rds,
-    aws_secretsmanager as secrets,
 )
+from constructs import Construct
 
-class CommonResourceStack(core.Stack):
+
+class CommonResourceStack(Stack):
     ''''
         build_spec
         aurora_creds
@@ -23,7 +23,7 @@ class CommonResourceStack(core.Stack):
         ecs_cluster
         ecs_task_options
     '''
-    def __init__(self, scope: core.Construct, id: str, props: dict) -> None:
+    def __init__(self, scope: Construct, id: str, props: dict) -> None:
         super().__init__(scope, id)
 
         db_port = int(props.get("POSTGRES_PORT", 5432))
