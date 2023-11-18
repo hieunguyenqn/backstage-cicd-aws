@@ -51,19 +51,20 @@ class CommonResourceStack(Stack):
             vpc=self.vpc
         )
 
-        # default egress rules are for any, so we just need an ingress rule
-        # to allow fargate to reach the aurora cluster and protect its access from elsewhere
-        self.aurora_sg.add_ingress_rule(peer=self.fargate_sg, connection=ec2.Port.tcp(db_port))
+       # default egress rules are for any, so we just need an ingress rule
+       # to allow fargate to reach the aurora cluster and protect its access from elsewhere
 
-        self.aurora_instance = rds.DatabaseInstance(
-            self,
-            "aurora-instance",
-            engine=rds.DatabaseInstanceEngine.AURORA,
-            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MEDIUM),
-            vpc=self.vpc,
-            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE),
-            security_groups=[self.aurora_sg],
-        )
+        # self.aurora_sg.add_ingress_rule(peer=self.fargate_sg, connection=ec2.Port.tcp(db_port))
+        #
+        # self.aurora_instance = rds.DatabaseInstance(
+        #     self,
+        #     "aurora-instance",
+        #     instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MEDIUM),
+        #     engine= rds.AuroraPostgresEngineVersion.VER_10_5,
+        #     vpc=self.vpc,
+        #     vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE),
+        #     security_groups=[self.aurora_sg],
+        # )
 
         # We either create or pull in an ECR repo for the app pipeline and ECS to use.
         # on initial deploy of ECS no image will be found, but the app pipeline should build and push a new image

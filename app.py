@@ -2,6 +2,7 @@
 import aws_cdk as cdk
 import yaml
 
+from backstage_cicd_aws.backstage import BackstageStack
 from backstage_cicd_aws.infra_pipeline import InfraPipelineStack
 
 # load yaml file and get key value for env
@@ -22,5 +23,7 @@ env = cdk.Environment(account=props.get('AWS_ACCOUNT'), region=props.get('AWS_RE
 app = cdk.App()
 
 infra_pipeline = InfraPipelineStack(app, stacks[0], stacks=stacks, props=props, env=env)
+
+backstage_infra = BackstageStack(app, stacks[1], props=props,  env=env)
 
 app.synth()

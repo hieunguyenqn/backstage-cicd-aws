@@ -46,8 +46,9 @@ class InfraPipelineStack(Stack):
         )
         # lookups needed by backstage stack have to have permissions added in order to synth
         codebuild_policy = iam.PolicyStatement(
+            effect=iam.Effect.ALLOW,
             resources=["*"],
-            actions=['*'],
+            actions=["*"],
         )
 
         synth_project.add_to_role_policy(codebuild_policy)

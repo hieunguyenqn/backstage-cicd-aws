@@ -7,7 +7,7 @@ common:
 
   # AWS Environment
   AWS_REGION: 'ap-southeast-1'
-  AWS_ACCOUNT: "938364739091"
+  AWS_ACCOUNT: "952379647918"
   TAG_STACK_NAME: "backstage-infra"
   TAG_STACK_PRODUCT: "platform"
 
@@ -23,7 +23,7 @@ common:
   GITHUB_INFRA_BRANCH : "main"
   GITHUB_ORG: 'hieunguyenqn'
   # Github Connection for Code* services
-  CODESTAR_CONN_ARN: "arn:aws:codestar-connections:ap-southeast-1:938364739091:connection/cb60ffe7-4dd7-4a32-9f48-4f2f77b7a8b0"
+  CODESTAR_CONN_ARN: "arn:aws:codestar-connections:ap-southeast-1:952379647918:connection/f083441c-ebc3-4c62-a909-8945cad87834"
  # ENV var overrides per stage
 stages: 
   test:
