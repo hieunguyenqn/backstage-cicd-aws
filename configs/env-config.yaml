@@ -22,6 +22,10 @@ common:
   GITHUB_INFRA_REPO: "backstage-cicd-aws"
   GITHUB_INFRA_BRANCH : "main"
   GITHUB_ORG: 'hieunguyenqn'
+  # github secret lookup, used by app to configure integration to github
+  GITHUB_APP_ARN: "arn:aws:secretsmanager:ap-southeast-1:952379647918:secret:github_secret-QBWjNy"
+  # AWS Secret Name use by APP for auth to aws services.
+  AWS_AUTH_SECRET_NAME: "stagebackawsauthsecret"
   # Github Connection for Code* services
   CODESTAR_CONN_ARN: "arn:aws:codestar-connections:ap-southeast-1:952379647918:connection/f083441c-ebc3-4c62-a909-8945cad87834"
  # ENV var overrides per stage

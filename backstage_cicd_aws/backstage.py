@@ -13,6 +13,8 @@ from aws_cdk import aws_ecs_patterns as ecs_patterns
 from aws_cdk import aws_secretsmanager as secrets
 from constructs import Construct
 
+from backstage_cicd_aws.app_pipeline import AppPipelineStack
+
 
 # from collections import OrderedDict
 
@@ -52,7 +54,7 @@ class BackstageStack(Stack):
         self.aurora_sg.add_ingress_rule(peer=self.fargate_sg, connection=ec2.Port.tcp(db_port))
 
         self.aurora_instance = rds.InstanceProps(
-            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
+            instance_type=ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE3, ec2.InstanceSize.MEDIUM),
             vpc=self.vpc,
             security_groups=[self.aurora_sg]
         )
@@ -100,7 +102,7 @@ class BackstageStack(Stack):
 
         self.aurora_pg = rds.DatabaseCluster(
             self, "PGDatabase",
-            engine=rds.DatabaseClusterEngine.aurora_postgres(version=rds.AuroraPostgresEngineVersion.VER_10_14),
+            engine=rds.DatabaseClusterEngine.aurora_postgres(version=rds.AuroraPostgresEngineVersion.VER_15_3),
             credentials=rds.Credentials.from_secret(self.aurora_creds),
             instance_props=self.aurora_instance,
             # subnet_group=db_subnet_group,
@@ -122,19 +124,20 @@ class BackstageStack(Stack):
 
         # Easiest way to stand up mult-tier ECS app is with an ecs_pattern,  we are making it HTTPS
         # and accessible on a DNS name. We give ECS the Security Group for fargate
-        self.ecs_stack = ecs_patterns.ApplicationLoadBalancedFargateService(self, "BackstageService",
-                                                                            cluster=self.ecs_cluster,  # Required
-                                                                            cpu=512,  # Default is 256
-                                                                            desired_count=1,  # Default is 1
-                                                                            memory_limit_mib=2048,  # Default is 512
-                                                                            public_load_balancer=True,
-                                                                            # Default is False
-                                                                            security_groups=[self.fargate_sg],
-                                                                            # put the task/cluster in the group we created
-                                                                            task_image_options=self.ecs_task_options,
-                                                                            # certificate=self.cert, #specifiying the cert enables https
-                                                                            #redirect_http=True,
-                                                                            # domain_name = fqdn,
-                                                                            # domain_zone = self.hosted_zone,
-                                                                            enable_ecs_managed_tags=True,
-                                                                            )
+        # self.ecs_stack = ecs_patterns.ApplicationLoadBalancedFargateService(self, "BackstageService",
+        #                                                                     cluster=self.ecs_cluster,  # Required
+        #                                                                     cpu=512,  # Default is 256
+        #                                                                     desired_count=1,  # Default is 1
+        #                                                                     memory_limit_mib=2048,  # Default is 512
+        #                                                                     public_load_balancer=True,
+        #                                                                     # Default is False
+        #                                                                     security_groups=[self.fargate_sg],
+        #                                                                     # put the task/cluster in the group we created
+        #                                                                     task_image_options=self.ecs_task_options,
+        #                                                                     # certificate=self.cert, #specifiying the cert enables https
+        #                                                                     # redirect_http=True,
+        #                                                                     # domain_name = fqdn,
+        #                                                                     # domain_zone = self.hosted_zone,
+        #                                                                     enable_ecs_managed_tags=True,
+        #                                                                     )
+

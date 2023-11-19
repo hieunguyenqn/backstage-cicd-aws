@@ -2,6 +2,7 @@
 import aws_cdk as cdk
 import yaml
 
+from backstage_cicd_aws.app_pipeline import AppPipelineStack
 from backstage_cicd_aws.backstage import BackstageStack
 from backstage_cicd_aws.infra_pipeline import InfraPipelineStack
 
@@ -23,6 +24,8 @@ env = cdk.Environment(account=props.get('AWS_ACCOUNT'), region=props.get('AWS_RE
 app = cdk.App()
 
 infra_pipeline = InfraPipelineStack(app, stacks[0], stacks=stacks, props=props, env=env)
+
+app_pipeline = AppPipelineStack(app, 'backstage-app-pipeline', props, env=env)
 
 backstage_infra = BackstageStack(app, stacks[1], props=props,  env=env)
 
