@@ -14,7 +14,17 @@ What's Here
 
 Getting Started
 ---------------
+### Prerequisites
+ you will need to have at least the following installed and configured:
+
++ python3
++  aws cli
++ aws cdk
+
+and you will need to have your backstage application code in a separate repo from this one.
+
 
 Documentation
 ------------------
-## 
+### Diagram
+![Image of Architecture](./docs/stageback-design.png)
