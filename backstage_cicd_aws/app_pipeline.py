@@ -55,7 +55,7 @@ class AppPipelineStack(Stack):
             project_name="backstage-app-pipeline",
             build_spec=codebuild.BuildSpec.from_object(build_spec),
             # has to be compiled at deploy time rather than execution time.
-            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_7_0, privileged=True),
+            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_4_0, privileged=True),
         )
         # add policy to update push to ECR
         policy = iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryPowerUser")
