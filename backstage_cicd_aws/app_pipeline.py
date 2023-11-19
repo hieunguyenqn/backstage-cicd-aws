@@ -11,7 +11,7 @@ from constructs import Construct
 
 
 class AppPipelineStack(Stack):
-    def __init__(self, scope: Construct, construct_id: str, props: dict,**kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, props: dict, **kwargs) -> None:
         super().__init__(scope=scope, id=construct_id, **kwargs)
         # github info for codepipeline
         github_repo = props.get("GITHUB_APP_REPO")
@@ -53,9 +53,9 @@ class AppPipelineStack(Stack):
             self,
             "CodebuildProject",
             project_name="backstage-app-pipeline",
-            build_spec=codebuild.BuildSpec.from_object(build_spec),
+            build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml"),
             # has to be compiled at deploy time rather than execution time.
-            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_4_0, privileged=True),
+            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_7_0, privileged=True),
         )
         # add policy to update push to ECR
         policy = iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryPowerUser")
@@ -69,7 +69,7 @@ class AppPipelineStack(Stack):
 
         # code build action will use docker to build new image and push to ECR
         # the buildspec.yaml is in the backstage app repo
-        #repo_uri = crs.image_repo.repository_uri
+        # repo_uri = crs.image_repo.repository_uri
         repo_uri = 'nginx'
         base_repo_uri = f"{props.get('AWS_ACCOUNT')}.dkr.ecr.{props.get('AWS_REGION')}.amazonaws.com"
 
