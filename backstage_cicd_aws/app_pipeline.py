@@ -26,12 +26,6 @@ class AppPipelineStack(Stack):
         ### once this pipeline is built we should only need to commit changes
         ### to the backstage app repo to deploy and update
 
-        # because this pipeline uses a different repo as source
-        # we need to statically allocate the buildscript from an object
-        # rather than just pass the file from source.
-        with open(r'./app-buildspec.yml') as file:
-            build_spec = yaml.full_load(file)
-
         # create the output artifact space for the pipeline
         self.source_output = codepipeline.Artifact()
         self.build_output = codepipeline.Artifact()
