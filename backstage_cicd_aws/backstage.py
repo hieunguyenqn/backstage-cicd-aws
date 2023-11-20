@@ -7,13 +7,11 @@ from aws_cdk import (
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_ecr as ecr
 from aws_cdk import aws_ecs as ecs
+from aws_cdk import aws_ecs_patterns as ecs_patterns
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_rds as rds
-from aws_cdk import aws_ecs_patterns as ecs_patterns
 from aws_cdk import aws_secretsmanager as secrets
 from constructs import Construct
-
-from backstage_cicd_aws.app_pipeline import AppPipelineStack
 
 
 # from collections import OrderedDict
@@ -123,21 +121,21 @@ class BackstageStack(Stack):
         )
 
         # Easiest way to stand up mult-tier ECS app is with an ecs_pattern,  we are making it HTTPS
-        # and accessible on a DNS name. We give ECS the Security Group for fargate
-        # self.ecs_stack = ecs_patterns.ApplicationLoadBalancedFargateService(self, "BackstageService",
-        #                                                                     cluster=self.ecs_cluster,  # Required
-        #                                                                     cpu=512,  # Default is 256
-        #                                                                     desired_count=1,  # Default is 1
-        #                                                                     memory_limit_mib=2048,  # Default is 512
-        #                                                                     public_load_balancer=True,
-        #                                                                     # Default is False
-        #                                                                     security_groups=[self.fargate_sg],
-        #                                                                     # put the task/cluster in the group we created
-        #                                                                     task_image_options=self.ecs_task_options,
-        #                                                                     # certificate=self.cert, #specifiying the cert enables https
-        #                                                                     # redirect_http=True,
-        #                                                                     # domain_name = fqdn,
-        #                                                                     # domain_zone = self.hosted_zone,
-        #                                                                     enable_ecs_managed_tags=True,
-        #                                                                     )
+        #and accessible on a DNS name. We give ECS the Security Group for fargate
+        self.ecs_stack = ecs_patterns.ApplicationLoadBalancedFargateService(self, "BackstageService",
+                                                                            cluster=self.ecs_cluster,  # Required
+                                                                            cpu=512,  # Default is 256
+                                                                            desired_count=1,  # Default is 1
+                                                                            memory_limit_mib=2048,  # Default is 512
+                                                                            public_load_balancer=True,
+                                                                            # Default is False
+                                                                            security_groups=[self.fargate_sg],
+                                                                            # put the task/cluster in the group we created
+                                                                            task_image_options=self.ecs_task_options,
+                                                                             certificate=self.cert, #specifiying the cert enables https
+                                                                             redirect_http=True,
+                                                                            # domain_name = fqdn,
+                                                                            # domain_zone = self.hosted_zone,
+                                                                            enable_ecs_managed_tags=True,
+                                                                            )
 

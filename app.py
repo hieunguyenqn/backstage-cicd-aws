@@ -10,7 +10,7 @@ from backstage_cicd_aws.infra_pipeline import InfraPipelineStack
 with open("./configs/env-config.yaml") as confFile:
     conf = yaml.full_load(confFile)
 props = conf['common']
-
+stages = conf['stages']
 # start the naming circus
 stack_name = props.get('TAG_STACK_NAME', 'backstage')
 
@@ -25,8 +25,8 @@ app = cdk.App()
 
 infra_pipeline = InfraPipelineStack(app, stacks[0], stacks=stacks, props=props, env=env)
 
-app_pipeline = AppPipelineStack(app, 'backstage-app-pipeline', props, env=env)
+app_pipeline = AppPipelineStack(app, 'backstage-app-pipeline', props, stages=stages, env=env)
 
-backstage_infra = BackstageStack(app, stacks[1], props=props,  env=env)
+backstage_infra = BackstageStack(app, stacks[1], props=props, env=env)
 
 app.synth()

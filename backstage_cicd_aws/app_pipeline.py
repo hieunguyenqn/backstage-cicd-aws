@@ -11,7 +11,7 @@ from constructs import Construct
 
 
 class AppPipelineStack(Stack):
-    def __init__(self, scope: Construct, construct_id: str, props: dict, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, props: dict, stages: dict, **kwargs) -> None:
         super().__init__(scope=scope, id=construct_id, **kwargs)
         # github info for codepipeline
         github_repo = props.get("GITHUB_APP_REPO")
@@ -49,7 +49,8 @@ class AppPipelineStack(Stack):
             project_name="backstage-app-pipeline",
             build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml"),
             # has to be compiled at deploy time rather than execution time.
-            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.STANDARD_7_0, privileged=True),
+            environment=codebuild.BuildEnvironment(build_image=codebuild.LinuxBuildImage.AMAZON_LINUX_2_5,
+                                                   privileged=True),
         )
         # add policy to update push to ECR
         policy = iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ContainerRegistryPowerUser")
@@ -63,8 +64,8 @@ class AppPipelineStack(Stack):
 
         # code build action will use docker to build new image and push to ECR
         # the buildspec.yaml is in the backstage app repo
-        # repo_uri = crs.image_repo.repository_uri
-        repo_uri = 'nginx'
+        repo_uri = self.image_repo.repository_uri
+        # repo_uri = '952379647918.dkr.ecr.ap-southeast-1.amazonaws.com/backstage'
         base_repo_uri = f"{props.get('AWS_ACCOUNT')}.dkr.ecr.{props.get('AWS_REGION')}.amazonaws.com"
 
         build_action = actions.CodeBuildAction(
@@ -96,6 +97,20 @@ class AppPipelineStack(Stack):
             stage_name="Build",
             actions=[build_action]
         )
+
+        # we add deploy stages to the pipeline based on stages dict.
+        for name, stage in stages.items():
+            # dont pass these into the ECS container env.
+            approval = stage.pop('STAGE_APPROVAL', False)
+            emails = stage.pop('APPROVAL_EMAILS', None)
+            # overload the shared env vars with those for the stage specifics if required. 
+            props = {
+                **props,
+                **stage
+            }
+
+            # add a ECS deploy stage with the stage specific service, and an approval stage if requested.
+            self.pipeline.add_deploy_stage(name, self.ecs_stack.service, approval, emails)
 
     def add_deploy_stage(self, name: str, fargate_service: ecs.IBaseService, approval: bool = False, emails: list = []):
         dps = self.pipeline.add_stage(
