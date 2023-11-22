@@ -64,8 +64,8 @@ class AppPipelineStack(Stack):
 
         # code build action will use docker to build new image and push to ECR
         # the buildspec.yaml is in the backstage app repo
-        repo_uri = self.image_repo.repository_uri
-        # repo_uri = '952379647918.dkr.ecr.ap-southeast-1.amazonaws.com/backstage'
+       # repo_uri = self.image_repo.repository_uri
+        repo_uri = f"{props.get('AWS_ACCOUNT')}.dkr.ecr.{props.get('AWS_REGION')}.amazonaws.com/backstage"
         base_repo_uri = f"{props.get('AWS_ACCOUNT')}.dkr.ecr.{props.get('AWS_REGION')}.amazonaws.com"
 
         build_action = actions.CodeBuildAction(
@@ -110,7 +110,7 @@ class AppPipelineStack(Stack):
             }
 
             # add a ECS deploy stage with the stage specific service, and an approval stage if requested.
-            self.pipeline.add_deploy_stage(name, self.ecs_stack.service, approval, emails)
+           # self.add_deploy_stage(name, self.ecs_stack.service, approval, emails)
 
     def add_deploy_stage(self, name: str, fargate_service: ecs.IBaseService, approval: bool = False, emails: list = []):
         dps = self.pipeline.add_stage(
